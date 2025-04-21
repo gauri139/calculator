@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body { background-color: #f4f4f4; font-family: Arial, sans-serif; }
+        .container { max-width: 350px; margin: 80px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px gray; }
+        input, select, button { width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        button { background-color: #2196F3; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculator</h2>
+        <input type="number" id="x" placeholder="Enter first number">
+        <input type="number" id="y" placeholder="Enter second number">
+        <select id="operation">
+            <option value="addition">Addition</option>
+            <option value="subtraction">Subtraction</option>
+            <option value="multiplication">Multiplication</option>
+            <option value="division">Division</option>
+        </select>
+        <button onclick="calculate()">Calculate</button>
+        <button onclick="viewHistory()" style="background-color: #555;">View History</button>
+        <p id="result" style="font-weight: bold;"></p>
+    </div>
+
+    <script>
+        const username = localStorage.getItem('username');
+
+        function calculate() {
+            const data = {
+                x: document.getElementById('x').value,
+                y: document.getElementById('y').value,
+                operation: document.getElementById('operation').value,
+                username: username
+            };
+
+            fetch('/calculator', {
+                method: 'POST',
+                body: new URLSearchParams(data)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('result').innerText = "Result: " + data.result;
+            });
+        }
+
+        function viewHistory() {
+            window.location.href = "history.html";
+        }
+    </script>
+</body>
+</html>

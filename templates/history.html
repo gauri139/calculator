@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History</title>
+    <style>
+        body { background-color: #f4f4f4; font-family: Arial, sans-serif; }
+        .container { max-width: 700px; margin: 40px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px gray; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #eee; }
+        button { margin-top: 10px; padding: 10px; border: none; border-radius: 6px; background-color: #e53935; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Operation History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operand 1</th>
+                    <th>Operand 2</th>
+                    <th>Operation</th>
+                    <th>Result</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+        </table>
+        <button onclick="clearHistory()">Clear History</button>
+    </div>
+
+    <script>
+        const username = localStorage.getItem('username');
+
+        fetch('/history', {
+            method: 'POST',
+            body: new URLSearchParams({ username })
+        })
+        .then(res => res.json())
+        .then(data => {
+            const history = data.history;
+            const tbody = document.getElementById('history-body');
+            history.forEach(item => {
+                const row = `<tr>
+                    <td>${item.x}</td>
+                    <td>${item.y}</td>
+                    <td>${item.operation}</td>
+                    <td>${item.result}</td>
+                    <td>${item.timestamp}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        });
+
+        function clearHistory() {
+            fetch('/clear-history', {
+                method: 'POST',
+                body: new URLSearchParams({ username })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        body { background-color: #f4f4f4; font-family: Arial, sans-serif; }
+        .container { max-width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px gray; }
+        input, button { width: 100%; margin: 8px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        button { background-color: #4CAF50; color: white; border: none; }
+        a { font-size: 14px; color: #555; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="email" id="email_id" placeholder="Email ID" required>
+        <input type="text" id="mobile_number" placeholder="Mobile Number" required>
+        <input type="date" id="dob" placeholder="Date of Birth" required>
+        <button onclick="register()">Register</button>
+        <p><a href="login.html">Already have an account? Login</a></p>
+        <p id="msg" style="color: red;"></p>
+    </div>
+
+    <script>
+        function register() {
+            const data = {
+                name: document.getElementById('name').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                email_id: document.getElementById('email_id').value,
+                mobile_number: document.getElementById('mobile_number').value,
+                dob: document.getElementById('dob').value
+            };
+
+            fetch('/register', {
+                method: 'POST',
+                body: new URLSearchParams(data)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('msg').innerText = data.message;
+                if (data.status === 'Success') {
+                    setTimeout(() => window.location.href = 'login.html', 1000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
